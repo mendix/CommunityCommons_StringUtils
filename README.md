@@ -5,7 +5,7 @@ A collection of reusable actions concerning 'Strings'.
 Community Commons is a series of modules for and by the community extending the low-code capabilities of the Mendix Platform.
 
 ## Contributing
-For more information on contributing to this repository visit [Contributing to a GitHub repository](https://world.mendix.com/display/howto50/Contributing+to+a+GitHub+repository)!
+For more information on contributing to this repository visit [Contributing to a GitHub repository](https://docs.mendix.com/howto/collaboration-requirements-management/contribute-to-a-github-repository)!
 
 ## Microflow Activities (Java actions exposed as microflows)
 Available microflow activities to use in your microflows
@@ -29,7 +29,11 @@ Available microflow activities to use in your microflows
 - String - Right pad
 - String - Length
 - String - Remove whitespace (Trim)
-- URLEncode - Translates a string into 'application/x-www-form-urlencoded' format.
+- String - Substring before
+- String - Substring before last
+- String - Substring after
+- String - Substring after last
+
 
 # Business rules
 - IsEmptyString
@@ -37,7 +41,6 @@ Available microflow activities to use in your microflows
 
 # Dependencies
 - owasp-java-html-sanitizer.jar
-- org.apache.commons.io-2.3.0.jar
-- org.apache.commons.lang3.jar
-- commons-codec-1.10.jar
-- com.google.guava-14.0.1.jar
+- org.apache.commons.lang3-12.0.jar
+- org.apache.commons.io-2.8.0.jar
+- com.google.guava-30.1.1.jar

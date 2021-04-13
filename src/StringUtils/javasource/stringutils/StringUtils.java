@@ -1,5 +1,6 @@
 package stringutils;
 
+
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
@@ -151,7 +152,7 @@ public class StringUtils
 		return Base64.getEncoder().encodeToString(value.getBytes());
 	}
 	
-	public static String HTMLToPlainText(String html) throws IOException
+	public static String HTMLToPlainText(String html) throws IOException 
 	{
 		if (html == null)
 			return "";

@@ -4,7 +4,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.security.AccessControlException;
 import java.util.Date;
 
-import org.apache.commons.lang3.StringUtils;
 import org.junit.runner.Description;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
@@ -116,7 +115,7 @@ public class UnitTestRunListener extends RunListener {
 
 	private String findProperExceptionLine(String trace)
 	{
-		String[] lines = StringUtils.split(trace,"\n");
+		String[] lines = trace.split("\n");
 		if (lines.length > 2)
 			for(int i = 1; i < lines.length; i++) {
 				String line = lines[i].trim();
