@@ -29,3 +29,5 @@ src/releases
 .project
 src/javasource/system/actions/VerifyPassword.java
 src/javasource/system/UserActionsRegistrar.java
+*.bak
+theme_old

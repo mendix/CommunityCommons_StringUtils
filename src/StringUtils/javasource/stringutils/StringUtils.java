@@ -1,19 +1,24 @@
 package stringutils;
 
+
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.DigestException;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Random;
+import java.text.Normalizer;
+import java.util.Base64;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import javax.crypto.Cipher;
 import javax.crypto.Mac;
@@ -24,40 +29,57 @@ import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.parser.ParserDelegator;
 
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.codec.binary.Hex;
-import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.owasp.html.PolicyFactory;
+import org.owasp.html.Sanitizers;
 
 import com.google.common.base.Function;
+import com.google.common.collect.ImmutableMap;
 import com.mendix.systemwideinterfaces.MendixRuntimeException;
 
-import stringutils.proxies.XSSPolicy;
+import stringutils.proxies.SanitizerPolicy;
+import static stringutils.proxies.SanitizerPolicy.BLOCKS;
+import static stringutils.proxies.SanitizerPolicy.FORMATTING;
+import static stringutils.proxies.SanitizerPolicy.IMAGES;
+import static stringutils.proxies.SanitizerPolicy.LINKS;
+import static stringutils.proxies.SanitizerPolicy.STYLES;
+import static stringutils.proxies.SanitizerPolicy.TABLES;
 
 public class StringUtils
 {
 
 	public static final String	HASH_ALGORITHM	= "SHA-256";
 	
-	public static String hash(String value, int length) throws NoSuchAlgorithmException, DigestException
-	{
+	static final Map<String, PolicyFactory> SANITIZER_POLICIES = new ImmutableMap.Builder<String, PolicyFactory>()
+			.put(BLOCKS.name(), Sanitizers.BLOCKS)
+			.put(FORMATTING.name(), Sanitizers.FORMATTING)
+			.put(IMAGES.name(), Sanitizers.IMAGES)
+			.put(LINKS.name(), Sanitizers.LINKS)
+			.put(STYLES.name(), Sanitizers.STYLES)
+			.put(TABLES.name(), Sanitizers.TABLES)
+			.build();
+	
+	public static String hash(String value, int length) throws NoSuchAlgorithmException, DigestException {
 		byte[] inBytes = value.getBytes(StandardCharsets.UTF_8);
 		byte[] outBytes = new byte[length];
 
-	    MessageDigest alg=MessageDigest.getInstance(HASH_ALGORITHM);
-	    alg.update(inBytes);
+		MessageDigest alg = MessageDigest.getInstance(HASH_ALGORITHM);
+		alg.update(inBytes);
 
-	    alg.digest(outBytes, 0, length);
+		alg.digest(outBytes, 0, length);
 
-	    StringBuffer hexString = new StringBuffer();
-	    for (int i = 0; i < outBytes.length; i++) {
-	    String hex = Integer.toHexString(0xff & outBytes[i]);
-	    if(hex.length() == 1) hexString.append('0');
-	        hexString.append(hex);
-	    }
-	    
-	    return hexString.toString();
+		StringBuilder hexString = new StringBuilder();
+		for (int i = 0; i < outBytes.length; i++) {
+			String hex = Integer.toHexString(0xff & outBytes[i]);
+			if (hex.length() == 1) {
+				hexString.append('0');
+			}
+			hexString.append(hex);
+		}
+
+		return hexString.toString();
 	}
-
+	
 	public static String regexReplaceAll(String haystack, String needleRegex,
 			String replacement)
 	{
@@ -91,39 +113,11 @@ public class StringUtils
 	{
 		return org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric(length);
 	}
-
-//  Move to Templates module	
-//	
-//	public static String substituteTemplate(final IContext context, String template,
-//			final IMendixObject substitute, final boolean HTMLEncode, final String datetimeformat) {
-//		return regexReplaceAll(template, "\\{(@)?([\\w./]+)\\}", new Function<MatchResult, String>() {
-//
-//			@Override
-//			public String apply(MatchResult match)
-//			{
-//				String value;
-//				String path = match.group(2);
-//				if (match.group(1) != null)
-//					value = String.valueOf(Core.getConfiguration().getConstantValue(path));
-//				else {
-//					try
-//					{
-//						value = ORM.getValueOfPath(context, substitute, path,	datetimeformat);
-//					}
-//					catch (Exception e)
-//					{
-//						throw new RuntimeException(e);
-//					}
-//				}
-//				return HTMLEncode ? HTMLEncode(value) : value;
-//			}
-//			
-//		});
-//	}
 	
 	public static String regexReplaceAll(String source, String regexString, Function<MatchResult, String> replaceFunction)  {
-		if (source == null || source.trim().isEmpty()) // avoid NPE's, save CPU
+		if (source == null || source.trim().isEmpty()) { // avoid NPE's, save CPU
 			return "";
+		}
 	
 		StringBuffer resultString = new StringBuffer();
 		Pattern regex = Pattern.compile(regexString);
@@ -139,35 +133,26 @@ public class StringUtils
 		return resultString.toString();
 	}
 
-	public static String HTMLEncode(String value)
-	{
-		return StringEscapeUtils.escapeHtml4(value);
-	}
-
-	public static String URLEncode(String value) throws UnsupportedEncodingException {
-		return URLEncoder.encode(value, "UTF-8");
-	}
-	
 	public static String randomHash()
 	{
 		return UUID.randomUUID().toString();
 	}
 
-	public static String base64Decode(String encoded)
-	{
-		if (encoded == null)
+	public static String base64Decode(String encoded) {
+		if (encoded == null) {
 			return null;
-		return new String(Base64.decodeBase64(encoded.getBytes()));
+		}
+		return new String(Base64.getDecoder().decode(encoded.getBytes()));
 	}
 
-	public static String base64Encode(String value)
-	{
-		if (value == null)
+	public static String base64Encode(String value) {
+		if (value == null) {
 			return null;
-		return new String(Base64.encodeBase64(value.getBytes()));
+		}
+		return Base64.getEncoder().encodeToString(value.getBytes());
 	}
-
-	public static String HTMLToPlainText(String html) throws IOException
+	
+	public static String HTMLToPlainText(String html) throws IOException 
 	{
 		if (html == null)
 			return "";
@@ -208,153 +193,173 @@ public class StringUtils
     return result.toString();
 	}
 
-	public static String XSSSanitize(String html, XSSPolicy policy)
-			throws Exception {
-		if (html == null)
-			return "";
-		// return HtmlSanitizer.sanitize(html);
-		String policyString = policy == null ? "ebay" : policy.toString()
-				.toLowerCase();
-		return XSSSanitize(html, policyString);
-	}
-	
-	public static String XSSSanitize(String html, String policyString)
-			throws Exception {
-		
-		String sanitizedHTML = null;
-		
-		if (html == null)
-			return "";
-		if (policyString == null)
-			throw new Exception("Unable to perform XSS sanitization: policyString is null");
-		
-		if("ebay".equals(policyString)) {
-			sanitizedHTML = EbayPolicy.Sanitize(html);  
-		}
-		else if("slashdot".equals(policyString)) {
-			sanitizedHTML = SlashdotPolicy.Sanitize(html);
-		}
-
-		return sanitizedHTML;
-		
-	}
-
-	private static final String ALPHA_CAPS  = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    private static final String ALPHA   = "abcdefghijklmnopqrstuvwxyz";
-    private static final String NUM     = "0123456789";
-    private static final String SPL_CHARS   = "!@#$%^&*_=+-/";
 	/**
 	 * Returns a random strong password containing at least one number, lowercase character, uppercase character and strange character
 	 * @param length
 	 * @return
 	 */
-	public static String randomStrongPassword(int minLen, int maxLen, int noOfCAPSAlpha, 
-            int noOfDigits, int noOfSplChars) {
-        if(minLen > maxLen)
-            throw new IllegalArgumentException("Min. Length > Max. Length!");
-        if( (noOfCAPSAlpha + noOfDigits + noOfSplChars) > minLen )
-            throw new IllegalArgumentException
-            ("Min. Length should be atleast sum of (CAPS, DIGITS, SPL CHARS) Length!");
-        Random rnd = new Random();
-        int len = rnd.nextInt(maxLen - minLen + 1) + minLen;
-        char[] pswd = new char[len];
-        int index = 0;
-        for (int i = 0; i < noOfCAPSAlpha; i++) {
-            index = getNextIndex(rnd, len, pswd);
-            pswd[index] = ALPHA_CAPS.charAt(rnd.nextInt(ALPHA_CAPS.length()));
-        }
-        for (int i = 0; i < noOfDigits; i++) {
-            index = getNextIndex(rnd, len, pswd);
-            pswd[index] = NUM.charAt(rnd.nextInt(NUM.length()));
-        }
-        for (int i = 0; i < noOfSplChars; i++) {
-            index = getNextIndex(rnd, len, pswd);
-            pswd[index] = SPL_CHARS.charAt(rnd.nextInt(SPL_CHARS.length()));
-        }
-        for(int i = 0; i < len; i++) {
-            if(pswd[i] == 0) {
-                pswd[i] = ALPHA.charAt(rnd.nextInt(ALPHA.length()));
-            }
-        }
-        return String.valueOf(pswd);
-    }
-	private static int getNextIndex(Random rnd, int len, char[] pswd) {
-        int index = rnd.nextInt(len);
-        while(pswd[index = rnd.nextInt(len)] != 0);
-        return index;
-    }
+    public static String randomStrongPassword(int minLen, int maxLen, int noOfCAPSAlpha, int noOfDigits, int noOfSplChars) {
+		if (minLen > maxLen) {
+			throw new IllegalArgumentException("Min. Length > Max. Length!");
+		}
+		if ((noOfCAPSAlpha + noOfDigits + noOfSplChars) > minLen) {
+			throw new IllegalArgumentException("Min. Length should be atleast sum of (CAPS, DIGITS, SPL CHARS) Length!");
+		}
+		return generateCommonLangPassword(minLen, maxLen, noOfCAPSAlpha, noOfDigits, noOfSplChars);
+	}
+    
+    // See https://www.baeldung.com/java-generate-secure-password
+ 	// Implementation inspired by https://github.com/eugenp/tutorials/tree/master/core-java-modules/core-java-string-apis (under MIT license)
+ 	private static String generateCommonLangPassword(int minLen, int maxLen, int noOfCapsAlpha, int noOfDigits, int noOfSplChars) {
+ 		String upperCaseLetters = RandomStringUtils.random(noOfCapsAlpha, 65, 90, true, true);
+ 		String numbers = RandomStringUtils.randomNumeric(noOfDigits);
+ 		String specialChar = RandomStringUtils.random(noOfSplChars, 33, 47, false, false);
+ 		final int fixedNumber = noOfCapsAlpha + noOfDigits + noOfSplChars;
+ 		String totalChars = RandomStringUtils.randomAlphanumeric(minLen - fixedNumber, maxLen - fixedNumber);
+ 		String combinedChars = upperCaseLetters
+ 			.concat(numbers)
+ 			.concat(specialChar)
+ 			.concat(totalChars);
+ 		List<Character> pwdChars = combinedChars.chars()
+ 			.mapToObj(c -> (char) c)
+ 			.collect(Collectors.toList());
+ 		Collections.shuffle(pwdChars);
+ 		String password = pwdChars.stream()
+ 			.collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
+ 			.toString();
+ 		return password;
+ 	}
 
 	public static String encryptString(String key, String valueToEncrypt) throws Exception
 	{
-		if (valueToEncrypt == null) 
+		if (valueToEncrypt == null) {
 			return null;
-		if (key == null)
+		}
+		if (key == null) {
 			throw new MendixRuntimeException("Key should not be empty");
-		if (key.length() != 16)
+		}
+		if (key.length() != 16) {
 			throw new MendixRuntimeException("Key length should be 16");
+		}
 		Cipher c = Cipher.getInstance("AES/CBC/PKCS5PADDING");
 		SecretKeySpec k = new SecretKeySpec(key.getBytes(), "AES");
 		c.init(Cipher.ENCRYPT_MODE, k);
 		byte[] encryptedData = c.doFinal(valueToEncrypt.getBytes());
 		byte[] iv = c.getIV();
-		
-		return new String(Base64.encodeBase64(iv)) + ";" + new String(Base64.encodeBase64(encryptedData));
+
+		return Base64.getEncoder().encodeToString(iv) + ";" + Base64.getEncoder().encodeToString(encryptedData);
 	}
 
 	public static String decryptString(String key, String valueToDecrypt) throws Exception
 	{
-		if (valueToDecrypt == null)
+		if (valueToDecrypt == null) {
 			return null;
-		if (key == null)
+		}
+		if (key == null) {
 			throw new MendixRuntimeException("Key should not be empty");
-		if (key.length() != 16)
+		}
+		if (key.length() != 16) {
 			throw new MendixRuntimeException("Key length should be 16");
+		}
 		Cipher c = Cipher.getInstance("AES/CBC/PKCS5PADDING");
 		SecretKeySpec k = new SecretKeySpec(key.getBytes(), "AES");
 		String[] s = valueToDecrypt.split(";");
 		if (s.length < 2) //Not an encrypted string, just return the original value.
+		{
 			return valueToDecrypt;
-		byte[] iv = Base64.decodeBase64(s[0].getBytes());
-		byte[] encryptedData = Base64.decodeBase64(s[1].getBytes());
+		}
+		byte[] iv = Base64.getDecoder().decode(s[0].getBytes());
+		byte[] encryptedData = Base64.getDecoder().decode(s[1].getBytes());
 		c.init(Cipher.DECRYPT_MODE, k, new IvParameterSpec(iv));
 		return new String(c.doFinal(encryptedData));
 	}
 
 	
-	private static byte[] generateHmacSha256ByteArray(String key, String value) throws InvalidKeyException, NoSuchAlgorithmException {
-		
-		Mac sha256_HMAC = Mac.getInstance("HmacSHA256");
-		SecretKeySpec secret_key = new SecretKeySpec(key.getBytes(), "HmacSHA256");
-		sha256_HMAC.init(secret_key);
+	private static byte[] generateHmacSha256Bytes(String key, String valueToEncrypt) throws UnsupportedEncodingException, IllegalStateException, InvalidKeyException, NoSuchAlgorithmException {
+		SecretKeySpec secretKey = new SecretKeySpec(key.getBytes("UTF-8"), "HmacSHA256");
+		Mac mac = Mac.getInstance("HmacSHA256");
+		mac.init(secretKey);
+		mac.update(valueToEncrypt.getBytes("UTF-8"));
+		byte[] hmacData = mac.doFinal();
 
-		byte[] rawHmac = (sha256_HMAC.doFinal(value.getBytes()));
-		
-		return rawHmac; 
+		return hmacData;
 	}
-	
-	
-	public static String generateHmacSha256Hash(String key, String valueToEncrypt)
-	{
+
+	public static String generateHmacSha256(String key, String valueToEncrypt) {
 		try {
-            return new String(Base64.encodeBase64(generateHmacSha256ByteArray(key,valueToEncrypt)));
-		}
-		catch (Exception e) {
-			throw new RuntimeException("StringUtils::EncodeHmacSha256::Unable to encode: " + e.getMessage(), e);
+			byte[] hash = generateHmacSha256Bytes(key, valueToEncrypt);
+			StringBuilder result = new StringBuilder();
+			for (byte b : hash) {
+				result.append(String.format("%02x", b));
+			}
+			return result.toString();
+		} catch (UnsupportedEncodingException | IllegalStateException | InvalidKeyException | NoSuchAlgorithmException e) {
+			throw new RuntimeException("CommunityCommons::generateHmacSha256::Unable to encode: " + e.getMessage(), e);
 		}
 	}
-	
-	public static String generateHmacSha256HexDigest(String key, String valueToEncrypt)
-	{
+
+	public static String generateHmacSha256Hash(String key, String valueToEncrypt) {
 		try {
-            return Hex.encodeHexString(generateHmacSha256ByteArray(key,valueToEncrypt));
-		}
-		catch (Exception e) {
-			throw new RuntimeException("StringUtils::EncodeHmacSha256::Unable to encode: " + e.getMessage(), e);
+			return Base64.getEncoder().encodeToString(generateHmacSha256Bytes(key, valueToEncrypt));
+		} catch (UnsupportedEncodingException | IllegalStateException | InvalidKeyException | NoSuchAlgorithmException e) {
+			throw new RuntimeException("CommunityCommons::generateHmacSha256Hash::Unable to encode: " + e.getMessage(), e);
 		}
 	}
 	
+	public static String escapeHTML(String input) {
+		return input.replace("&", "&amp;")
+			.replace("<", "&lt;")
+			.replace(">", "&gt;")
+			.replace("\"", "&quot;")
+			.replace("'", "&#39;");// notice this one: for xml "&#39;" would be "&apos;" (http://blogs.msdn.com/b/kirillosenkov/archive/2010/03/19/apos-is-in-xml-in-html-use-39.aspx)
+		// OWASP also advises to escape "/" but give no convincing reason why: https://www.owasp.org/index.php/XSS_%28Cross_Site_Scripting%29_Prevention_Cheat_Sheet
+	}
 
 	public static String regexQuote(String unquotedLiteral) {
 		return Pattern.quote(unquotedLiteral);
 	}
+	
+	public static String substringBefore(String str, String separator) {
+		return org.apache.commons.lang3.StringUtils.substringBefore(str, separator);
+	}
+
+	public static String substringBeforeLast(String str, String separator) {
+		return org.apache.commons.lang3.StringUtils.substringBeforeLast(str, separator);
+	}
+
+	public static String substringAfter(String str, String separator) {
+		return org.apache.commons.lang3.StringUtils.substringAfter(str, separator);
+	}
+
+	public static String substringAfterLast(String str, String separator) {
+		return org.apache.commons.lang3.StringUtils.substringAfterLast(str, separator);
+	}
+
+	public static String removeEnd(String str, String toRemove) {
+		return org.apache.commons.lang3.StringUtils.removeEnd(str, toRemove);
+	}
+
+	public static String sanitizeHTML(String html, List<SanitizerPolicy> policyParams) {
+		PolicyFactory policyFactory = null;
+
+		for (SanitizerPolicy param : policyParams) {
+			policyFactory = (policyFactory == null) ? SANITIZER_POLICIES.get(param.name()) : policyFactory.and(SANITIZER_POLICIES.get(param.name()));
+		}
+
+		return sanitizeHTML(html, policyFactory);
+	}
+
+	public static String sanitizeHTML(String html, PolicyFactory policyFactory) {
+		return policyFactory.sanitize(html);
+	}
+
+	public static String stringSimplify(String value) {
+		String normalized = Normalizer.normalize(value, Normalizer.Form.NFD);
+		return normalized.replaceAll("\\p{M}", ""); // removes all characters in Unicode Mark category
+	}
+
+	public static Boolean isStringSimplified(String value) {
+		return Normalizer.isNormalized(value, Normalizer.Form.NFD);
+	}
+	
 }

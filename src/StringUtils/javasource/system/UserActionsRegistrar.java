@@ -1,93 +1,61 @@
 package system;
 
-import org.osgi.service.event.Event;
-import org.osgi.service.event.EventHandler;
+import com.mendix.core.actionmanagement.IActionRegistrator;
 
-import aQute.bnd.annotation.component.Component;
-import aQute.bnd.annotation.component.Reference;
-
-import com.mendix.core.Core;
-import com.mendix.core.component.LocalComponent;
-import com.mendix.core.component.MxRuntime;
-import com.mendix.integration.Integration;
-
-@Component(immediate = true, properties = {"event.topics:String=com/mendix/events/model/loaded"})
-public class UserActionsRegistrar implements EventHandler
+public class UserActionsRegistrar
 {
-	private MxRuntime mxRuntime;
-	private LocalComponent component;
-	private Integration integration;
-	
-	@Reference
-	public void setMxRuntime(MxRuntime runtime)
-	{
-		mxRuntime = runtime;
-		mxRuntime.bundleComponentLoaded();
-	}
-	
-	@Reference
-	public void setIntegration(Integration integration)
-	{
-		this.integration = integration;
-	}
-	
-	@Override
-	public void handleEvent(Event event)
-	{
-		if (event.getTopic().equals(com.mendix.core.event.EventConstants.ModelLoadedTopic()))        
-		{
-			component = mxRuntime.getMainComponent();
-			Core.initialize(component, integration);   
-			component.actionRegistry().registerUserAction(appcloudservices.actions.GenerateRandomPassword.class);
-			component.actionRegistry().registerUserAction(appcloudservices.actions.LogOutUser.class);
-			component.actionRegistry().registerUserAction(appcloudservices.actions.StartSignOnServlet.class);
-			component.actionRegistry().registerUserAction(objecthandling.actions.clone.class);
-			component.actionRegistry().registerUserAction(objecthandling.actions.commitInSeparateDatabaseTransaction.class);
-			component.actionRegistry().registerUserAction(objecthandling.actions.copyAttributes.class);
-			component.actionRegistry().registerUserAction(objecthandling.actions.createObjectListFromObject.class);
-			component.actionRegistry().registerUserAction(objecthandling.actions.deepClone.class);
-			component.actionRegistry().registerUserAction(objecthandling.actions.deleteAll.class);
-			component.actionRegistry().registerUserAction(objecthandling.actions.deleteInSeparateTransaction.class);
-			component.actionRegistry().registerUserAction(objecthandling.actions.deleteWithoutEvents.class);
-			component.actionRegistry().registerUserAction(objecthandling.actions.EndTransaction.class);
-			component.actionRegistry().registerUserAction(objecthandling.actions.getCreatedByUser.class);
-			component.actionRegistry().registerUserAction(objecthandling.actions.getGUID.class);
-			component.actionRegistry().registerUserAction(objecthandling.actions.getLastChangedByUser.class);
-			component.actionRegistry().registerUserAction(objecthandling.actions.getOriginalValueAsString.class);
-			component.actionRegistry().registerUserAction(objecthandling.actions.getTypeAsString.class);
-			component.actionRegistry().registerUserAction(objecthandling.actions.memberHasChanged.class);
-			component.actionRegistry().registerUserAction(objecthandling.actions.objectHasChanged.class);
-			component.actionRegistry().registerUserAction(objecthandling.actions.refreshClassByObject.class);
-			component.actionRegistry().registerUserAction(objecthandling.actions.StartTransaction.class);
-			component.actionRegistry().registerUserAction(stringutils.actions.Base64Decode.class);
-			component.actionRegistry().registerUserAction(stringutils.actions.Base64Encode.class);
-			component.actionRegistry().registerUserAction(stringutils.actions.DecryptString.class);
-			component.actionRegistry().registerUserAction(stringutils.actions.EncryptString.class);
-			component.actionRegistry().registerUserAction(stringutils.actions.GenerateHMAC_SHA256_hash.class);
-			component.actionRegistry().registerUserAction(stringutils.actions.GenerateHMAC_SHA256_HexDigest.class);
-			component.actionRegistry().registerUserAction(stringutils.actions.Hash.class);
-			component.actionRegistry().registerUserAction(stringutils.actions.HTMLEncode.class);
-			component.actionRegistry().registerUserAction(stringutils.actions.HTMLToPlainText.class);
-			component.actionRegistry().registerUserAction(stringutils.actions.RandomHash.class);
-			component.actionRegistry().registerUserAction(stringutils.actions.RandomString.class);
-			component.actionRegistry().registerUserAction(stringutils.actions.RandomStrongPassword.class);
-			component.actionRegistry().registerUserAction(stringutils.actions.RegexQuote.class);
-			component.actionRegistry().registerUserAction(stringutils.actions.RegexReplaceAll.class);
-			component.actionRegistry().registerUserAction(stringutils.actions.RegexTest.class);
-			component.actionRegistry().registerUserAction(stringutils.actions.StringLeftPad.class);
-			component.actionRegistry().registerUserAction(stringutils.actions.StringLength.class);
-			component.actionRegistry().registerUserAction(stringutils.actions.StringRightPad.class);
-			component.actionRegistry().registerUserAction(stringutils.actions.StringTrim.class);
-			component.actionRegistry().registerUserAction(stringutils.actions.URLEncode.class);
-			component.actionRegistry().registerUserAction(stringutils.actions.XSSSanitize.class);
-			component.actionRegistry().registerUserAction(system.actions.VerifyPassword.class);
-			component.actionRegistry().registerUserAction(unittesting.actions.FindAllUnitTests.class);
-			component.actionRegistry().registerUserAction(unittesting.actions.ReportStepJava.class);
-			component.actionRegistry().registerUserAction(unittesting.actions.RunAllUnitTestsWrapper.class);
-			component.actionRegistry().registerUserAction(unittesting.actions.RunUnitTest.class);
-			component.actionRegistry().registerUserAction(unittesting.actions.StartRemoteApiServlet.class);
-			component.actionRegistry().registerUserAction(unittesting.actions.StartRunAllSuites.class);
-			component.actionRegistry().registerUserAction(unittesting.actions.ThrowAssertionFailed.class);
-		}
-	}
+  public void registerActions(IActionRegistrator registrator)
+  {
+    registrator.bundleComponentLoaded();
+    registrator.registerUserAction(objecthandling.actions.clone.class);
+    registrator.registerUserAction(objecthandling.actions.commitInSeparateDatabaseTransaction.class);
+    registrator.registerUserAction(objecthandling.actions.copyAttributes.class);
+    registrator.registerUserAction(objecthandling.actions.createObjectListFromObject.class);
+    registrator.registerUserAction(objecthandling.actions.deepClone.class);
+    registrator.registerUserAction(objecthandling.actions.deleteAll.class);
+    registrator.registerUserAction(objecthandling.actions.deleteInSeparateTransaction.class);
+    registrator.registerUserAction(objecthandling.actions.deleteWithoutEvents.class);
+    registrator.registerUserAction(objecthandling.actions.EndTransaction.class);
+    registrator.registerUserAction(objecthandling.actions.getCreatedByUser.class);
+    registrator.registerUserAction(objecthandling.actions.getGUID.class);
+    registrator.registerUserAction(objecthandling.actions.getLastChangedByUser.class);
+    registrator.registerUserAction(objecthandling.actions.getOriginalValueAsString.class);
+    registrator.registerUserAction(objecthandling.actions.getTypeAsString.class);
+    registrator.registerUserAction(objecthandling.actions.memberHasChanged.class);
+    registrator.registerUserAction(objecthandling.actions.objectHasChanged.class);
+    registrator.registerUserAction(objecthandling.actions.refreshClassByObject.class);
+    registrator.registerUserAction(objecthandling.actions.StartTransaction.class);
+    registrator.registerUserAction(stringutils.actions.Base64Decode.class);
+    registrator.registerUserAction(stringutils.actions.Base64Encode.class);
+    registrator.registerUserAction(stringutils.actions.DecryptString.class);
+    registrator.registerUserAction(stringutils.actions.EncryptString.class);
+    registrator.registerUserAction(stringutils.actions.GenerateHMAC_SHA256_hash.class);
+    registrator.registerUserAction(stringutils.actions.GenerateHMAC_SHA256_HexDigest.class);
+    registrator.registerUserAction(stringutils.actions.Hash.class);
+    registrator.registerUserAction(stringutils.actions.HTMLEscape.class);
+    registrator.registerUserAction(stringutils.actions.HTMLToPlainText.class);
+    registrator.registerUserAction(stringutils.actions.RandomHash.class);
+    registrator.registerUserAction(stringutils.actions.RandomString.class);
+    registrator.registerUserAction(stringutils.actions.RandomStrongPassword.class);
+    registrator.registerUserAction(stringutils.actions.RegexQuote.class);
+    registrator.registerUserAction(stringutils.actions.RegexReplaceAll.class);
+    registrator.registerUserAction(stringutils.actions.RegexTest.class);
+    registrator.registerUserAction(stringutils.actions.StringLeftPad.class);
+    registrator.registerUserAction(stringutils.actions.StringLength.class);
+    registrator.registerUserAction(stringutils.actions.StringRightPad.class);
+    registrator.registerUserAction(stringutils.actions.StringTrim.class);
+    registrator.registerUserAction(stringutils.actions.SubstringAfter.class);
+    registrator.registerUserAction(stringutils.actions.SubstringAfterLast.class);
+    registrator.registerUserAction(stringutils.actions.SubstringBefore.class);
+    registrator.registerUserAction(stringutils.actions.SubstringBeforeLast.class);
+    registrator.registerUserAction(stringutils.actions.XSSSanitize.class);
+    registrator.registerUserAction(system.actions.VerifyPassword.class);
+    registrator.registerUserAction(unittesting.actions.FindAllUnitTests.class);
+    registrator.registerUserAction(unittesting.actions.ReportStepJava.class);
+    registrator.registerUserAction(unittesting.actions.RunAllUnitTestsWrapper.class);
+    registrator.registerUserAction(unittesting.actions.RunUnitTest.class);
+    registrator.registerUserAction(unittesting.actions.StartRemoteApiServlet.class);
+    registrator.registerUserAction(unittesting.actions.StartRunAllSuites.class);
+    registrator.registerUserAction(unittesting.actions.ThrowAssertionFailed.class);
+  }
 }
