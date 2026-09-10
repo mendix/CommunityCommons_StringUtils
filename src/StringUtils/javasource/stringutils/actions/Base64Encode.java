@@ -12,18 +12,22 @@ package stringutils.actions;
 import com.mendix.systemwideinterfaces.core.IContext;
 import com.mendix.webui.CustomJavaAction;
 import stringutils.StringUtils;
+import com.mendix.systemwideinterfaces.core.UserAction;
 
 /**
  * Converts a plain string to a base64 encoded string
  */
-public class Base64Encode extends CustomJavaAction<java.lang.String>
+public class Base64Encode extends UserAction<java.lang.String>
 {
-	private java.lang.String value;
+	private final java.lang.String value;
 
-	public Base64Encode(IContext context, java.lang.String value)
+	public Base64Encode(
+		IContext context,
+		java.lang.String _value
+	)
 	{
 		super(context);
-		this.value = value;
+		this.value = _value;
 	}
 
 	@java.lang.Override
@@ -36,6 +40,7 @@ public class Base64Encode extends CustomJavaAction<java.lang.String>
 
 	/**
 	 * Returns a string representation of this action
+	 * @return a string representation of this action
 	 */
 	@java.lang.Override
 	public java.lang.String toString()

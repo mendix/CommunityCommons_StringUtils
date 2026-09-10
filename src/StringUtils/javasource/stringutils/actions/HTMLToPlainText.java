@@ -12,19 +12,23 @@ package stringutils.actions;
 import com.mendix.systemwideinterfaces.core.IContext;
 import com.mendix.webui.CustomJavaAction;
 import stringutils.StringUtils;
+import com.mendix.systemwideinterfaces.core.UserAction;
 
 /**
  * Use this function to convert HTML text to plain text. 
  * It will preserve linebreaks but strip all other markup. including html entity decoding.
  */
-public class HTMLToPlainText extends CustomJavaAction<java.lang.String>
+public class HTMLToPlainText extends UserAction<java.lang.String>
 {
-	private java.lang.String html;
+	private final java.lang.String html;
 
-	public HTMLToPlainText(IContext context, java.lang.String html)
+	public HTMLToPlainText(
+		IContext context,
+		java.lang.String _html
+	)
 	{
 		super(context);
-		this.html = html;
+		this.html = _html;
 	}
 
 	@java.lang.Override
@@ -37,6 +41,7 @@ public class HTMLToPlainText extends CustomJavaAction<java.lang.String>
 
 	/**
 	 * Returns a string representation of this action
+	 * @return a string representation of this action
 	 */
 	@java.lang.Override
 	public java.lang.String toString()

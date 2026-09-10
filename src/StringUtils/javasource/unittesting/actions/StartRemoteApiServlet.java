@@ -13,15 +13,19 @@ import unittesting.RemoteApiServlet;
 import com.mendix.core.Core;
 import com.mendix.systemwideinterfaces.core.IContext;
 import com.mendix.webui.CustomJavaAction;
+import com.mendix.systemwideinterfaces.core.UserAction;
 
-public class StartRemoteApiServlet extends CustomJavaAction<java.lang.Boolean>
+public class StartRemoteApiServlet extends UserAction<java.lang.Boolean>
 {
-	private java.lang.String password;
+	private final java.lang.String password;
 
-	public StartRemoteApiServlet(IContext context, java.lang.String password)
+	public StartRemoteApiServlet(
+		IContext context,
+		java.lang.String _password
+	)
 	{
 		super(context);
-		this.password = password;
+		this.password = _password;
 	}
 
 	@java.lang.Override
@@ -35,6 +39,7 @@ public class StartRemoteApiServlet extends CustomJavaAction<java.lang.Boolean>
 
 	/**
 	 * Returns a string representation of this action
+	 * @return a string representation of this action
 	 */
 	@java.lang.Override
 	public java.lang.String toString()

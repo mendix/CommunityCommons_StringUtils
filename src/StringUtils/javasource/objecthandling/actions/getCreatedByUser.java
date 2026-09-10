@@ -13,20 +13,24 @@ import com.mendix.systemwideinterfaces.core.IContext;
 import com.mendix.systemwideinterfaces.core.IMendixObject;
 import com.mendix.webui.CustomJavaAction;
 import objecthandling.ORM;
+import com.mendix.systemwideinterfaces.core.UserAction;
 
 /**
  * Returns the user that created the object 
  * 
  * (or empty if not applicable).
  */
-public class getCreatedByUser extends CustomJavaAction<IMendixObject>
+public class getCreatedByUser extends UserAction<IMendixObject>
 {
-	private IMendixObject thing;
+	private final IMendixObject thing;
 
-	public getCreatedByUser(IContext context, IMendixObject thing)
+	public getCreatedByUser(
+		IContext context,
+		IMendixObject _thing
+	)
 	{
 		super(context);
-		this.thing = thing;
+		this.thing = _thing;
 	}
 
 	@java.lang.Override
@@ -39,6 +43,7 @@ public class getCreatedByUser extends CustomJavaAction<IMendixObject>
 
 	/**
 	 * Returns a string representation of this action
+	 * @return a string representation of this action
 	 */
 	@java.lang.Override
 	public java.lang.String toString()

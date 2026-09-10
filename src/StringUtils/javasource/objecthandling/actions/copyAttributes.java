@@ -13,22 +13,27 @@ import com.mendix.systemwideinterfaces.core.IContext;
 import com.mendix.systemwideinterfaces.core.IMendixObject;
 import com.mendix.webui.CustomJavaAction;
 import objecthandling.ORM;
+import com.mendix.systemwideinterfaces.core.UserAction;
 
 /**
  * Copies all common primitive attributes from source to target, which are not necessarily of the same type. This is useful to, for example, translate persistent object into non-persistant (view) objects.
  * 
  * Note that no automatic type conversion is done. 
  */
-public class copyAttributes extends CustomJavaAction<java.lang.Boolean>
+public class copyAttributes extends UserAction<java.lang.Boolean>
 {
-	private IMendixObject source;
-	private IMendixObject target;
+	private final IMendixObject source;
+	private final IMendixObject target;
 
-	public copyAttributes(IContext context, IMendixObject source, IMendixObject target)
+	public copyAttributes(
+		IContext context,
+		IMendixObject _source,
+		IMendixObject _target
+	)
 	{
 		super(context);
-		this.source = source;
-		this.target = target;
+		this.source = _source;
+		this.target = _target;
 	}
 
 	@java.lang.Override
@@ -42,6 +47,7 @@ public class copyAttributes extends CustomJavaAction<java.lang.Boolean>
 
 	/**
 	 * Returns a string representation of this action
+	 * @return a string representation of this action
 	 */
 	@java.lang.Override
 	public java.lang.String toString()

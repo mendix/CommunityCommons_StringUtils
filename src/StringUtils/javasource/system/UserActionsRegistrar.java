@@ -6,7 +6,6 @@ public class UserActionsRegistrar
 {
   public void registerActions(IActionRegistrator registrator)
   {
-    registrator.bundleComponentLoaded();
     registrator.registerUserAction(objecthandling.actions.clone.class);
     registrator.registerUserAction(objecthandling.actions.commitInSeparateDatabaseTransaction.class);
     registrator.registerUserAction(objecthandling.actions.copyAttributes.class);

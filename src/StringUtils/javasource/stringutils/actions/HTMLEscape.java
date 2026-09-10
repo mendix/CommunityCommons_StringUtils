@@ -12,6 +12,7 @@ package stringutils.actions;
 import com.mendix.systemwideinterfaces.core.IContext;
 import com.mendix.webui.CustomJavaAction;
 import stringutils.StringUtils;
+import com.mendix.systemwideinterfaces.core.UserAction;
 
 /**
  * Encodes a string to HTML Entities, so that they can be displayed in the browser without breaking any layout. 
@@ -21,14 +22,17 @@ import stringutils.StringUtils;
  * 
  * Returns the encoded string.
  */
-public class HTMLEscape extends CustomJavaAction<java.lang.String>
+public class HTMLEscape extends UserAction<java.lang.String>
 {
-	private java.lang.String value;
+	private final java.lang.String value;
 
-	public HTMLEscape(IContext context, java.lang.String value)
+	public HTMLEscape(
+		IContext context,
+		java.lang.String _value
+	)
 	{
 		super(context);
-		this.value = value;
+		this.value = _value;
 	}
 
 	@java.lang.Override
@@ -41,6 +45,7 @@ public class HTMLEscape extends CustomJavaAction<java.lang.String>
 
 	/**
 	 * Returns a string representation of this action
+	 * @return a string representation of this action
 	 */
 	@java.lang.Override
 	public java.lang.String toString()

@@ -12,6 +12,7 @@ package stringutils.actions;
 import com.mendix.systemwideinterfaces.core.IContext;
 import com.mendix.webui.CustomJavaAction;
 import stringutils.StringUtils;
+import com.mendix.systemwideinterfaces.core.UserAction;
 
 /**
  * Secure one-way hash functions that takes arbitrary-sized data and output a fixed-length hash value using the SHA-256 hash algorithm. 
@@ -21,16 +22,20 @@ import stringutils.StringUtils;
  * 
  * Returns a SHA-256 hash of 'value', with length 'length'
  */
-public class Hash extends CustomJavaAction<java.lang.String>
+public class Hash extends UserAction<java.lang.String>
 {
-	private java.lang.String value;
-	private java.lang.Long length;
+	private final java.lang.String value;
+	private final java.lang.Long length;
 
-	public Hash(IContext context, java.lang.String value, java.lang.Long length)
+	public Hash(
+		IContext context,
+		java.lang.String _value,
+		java.lang.Long _length
+	)
 	{
 		super(context);
-		this.value = value;
-		this.length = length;
+		this.value = _value;
+		this.length = _length;
 	}
 
 	@java.lang.Override
@@ -43,6 +48,7 @@ public class Hash extends CustomJavaAction<java.lang.String>
 
 	/**
 	 * Returns a string representation of this action
+	 * @return a string representation of this action
 	 */
 	@java.lang.Override
 	public java.lang.String toString()

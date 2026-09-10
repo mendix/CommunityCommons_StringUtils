@@ -11,20 +11,24 @@ package stringutils.actions;
 
 import com.mendix.systemwideinterfaces.core.IContext;
 import com.mendix.webui.CustomJavaAction;
+import com.mendix.systemwideinterfaces.core.UserAction;
 
 /**
  * Returns -1 if the value is empty, the length of string (number of characters) otherwise.
  * 
  * DEPRECATED: The length() function is preferred. (See: https://world.mendix.com/display/NRG/String+function+calls)
  */
-public class StringLength extends CustomJavaAction<java.lang.Long>
+public class StringLength extends UserAction<java.lang.Long>
 {
-	private java.lang.String value;
+	private final java.lang.String value;
 
-	public StringLength(IContext context, java.lang.String value)
+	public StringLength(
+		IContext context,
+		java.lang.String _value
+	)
 	{
 		super(context);
-		this.value = value;
+		this.value = _value;
 	}
 
 	@java.lang.Override
@@ -39,6 +43,7 @@ public class StringLength extends CustomJavaAction<java.lang.Long>
 
 	/**
 	 * Returns a string representation of this action
+	 * @return a string representation of this action
 	 */
 	@java.lang.Override
 	public java.lang.String toString()

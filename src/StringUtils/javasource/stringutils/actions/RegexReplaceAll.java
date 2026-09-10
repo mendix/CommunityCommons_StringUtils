@@ -12,6 +12,7 @@ package stringutils.actions;
 import com.mendix.systemwideinterfaces.core.IContext;
 import com.mendix.webui.CustomJavaAction;
 import stringutils.StringUtils;
+import com.mendix.systemwideinterfaces.core.UserAction;
 
 /**
  * Performs a regular expression. Identical to the microflow expression function 'replaceAll'. Useful to be used from java, or in older Mendix versions. 
@@ -24,18 +25,23 @@ import stringutils.StringUtils;
  * A decent regexp tester can be found at:
  * http://www.fileformat.info/tool/regex.htm
  */
-public class RegexReplaceAll extends CustomJavaAction<java.lang.String>
+public class RegexReplaceAll extends UserAction<java.lang.String>
 {
-	private java.lang.String haystack;
-	private java.lang.String needleRegex;
-	private java.lang.String replacement;
+	private final java.lang.String haystack;
+	private final java.lang.String needleRegex;
+	private final java.lang.String replacement;
 
-	public RegexReplaceAll(IContext context, java.lang.String haystack, java.lang.String needleRegex, java.lang.String replacement)
+	public RegexReplaceAll(
+		IContext context,
+		java.lang.String _haystack,
+		java.lang.String _needleRegex,
+		java.lang.String _replacement
+	)
 	{
 		super(context);
-		this.haystack = haystack;
-		this.needleRegex = needleRegex;
-		this.replacement = replacement;
+		this.haystack = _haystack;
+		this.needleRegex = _needleRegex;
+		this.replacement = _replacement;
 	}
 
 	@java.lang.Override
@@ -48,6 +54,7 @@ public class RegexReplaceAll extends CustomJavaAction<java.lang.String>
 
 	/**
 	 * Returns a string representation of this action
+	 * @return a string representation of this action
 	 */
 	@java.lang.Override
 	public java.lang.String toString()

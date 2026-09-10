@@ -12,21 +12,26 @@ package stringutils.actions;
 import com.mendix.systemwideinterfaces.core.IContext;
 import com.mendix.webui.CustomJavaAction;
 import stringutils.StringUtils;
+import com.mendix.systemwideinterfaces.core.UserAction;
 
 /**
  * Decrypts an AES encrypted string.
  * The keylength should exactly be 16 characters (128 bit).
  */
-public class DecryptString extends CustomJavaAction<java.lang.String>
+public class DecryptString extends UserAction<java.lang.String>
 {
-	private java.lang.String valueToDecrypt;
-	private java.lang.String key;
+	private final java.lang.String valueToDecrypt;
+	private final java.lang.String key;
 
-	public DecryptString(IContext context, java.lang.String valueToDecrypt, java.lang.String key)
+	public DecryptString(
+		IContext context,
+		java.lang.String _valueToDecrypt,
+		java.lang.String _key
+	)
 	{
 		super(context);
-		this.valueToDecrypt = valueToDecrypt;
-		this.key = key;
+		this.valueToDecrypt = _valueToDecrypt;
+		this.key = _key;
 	}
 
 	@java.lang.Override
@@ -39,6 +44,7 @@ public class DecryptString extends CustomJavaAction<java.lang.String>
 
 	/**
 	 * Returns a string representation of this action
+	 * @return a string representation of this action
 	 */
 	@java.lang.Override
 	public java.lang.String toString()

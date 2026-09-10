@@ -11,11 +11,12 @@ package objecthandling.actions;
 
 import com.mendix.systemwideinterfaces.core.IContext;
 import com.mendix.webui.CustomJavaAction;
+import com.mendix.systemwideinterfaces.core.UserAction;
 
 /**
  * Starts a new transaction.
  */
-public class StartTransaction extends CustomJavaAction<java.lang.Boolean>
+public class StartTransaction extends UserAction<java.lang.Boolean>
 {
 	public StartTransaction(IContext context)
 	{
@@ -33,6 +34,7 @@ public class StartTransaction extends CustomJavaAction<java.lang.Boolean>
 
 	/**
 	 * Returns a string representation of this action
+	 * @return a string representation of this action
 	 */
 	@java.lang.Override
 	public java.lang.String toString()

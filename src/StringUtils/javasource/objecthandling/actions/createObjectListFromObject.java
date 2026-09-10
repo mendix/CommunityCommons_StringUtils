@@ -14,15 +14,19 @@ import java.util.List;
 import com.mendix.systemwideinterfaces.core.IContext;
 import com.mendix.webui.CustomJavaAction;
 import com.mendix.systemwideinterfaces.core.IMendixObject;
+import com.mendix.systemwideinterfaces.core.UserAction;
 
-public class createObjectListFromObject extends CustomJavaAction<java.util.List<IMendixObject>>
+public class createObjectListFromObject extends UserAction<java.util.List<IMendixObject>>
 {
-	private IMendixObject inputObject;
+	private final IMendixObject inputObject;
 
-	public createObjectListFromObject(IContext context, IMendixObject inputObject)
+	public createObjectListFromObject(
+		IContext context,
+		IMendixObject _inputObject
+	)
 	{
 		super(context);
-		this.inputObject = inputObject;
+		this.inputObject = _inputObject;
 	}
 
 	@java.lang.Override
@@ -38,6 +42,7 @@ public class createObjectListFromObject extends CustomJavaAction<java.util.List<
 
 	/**
 	 * Returns a string representation of this action
+	 * @return a string representation of this action
 	 */
 	@java.lang.Override
 	public java.lang.String toString()

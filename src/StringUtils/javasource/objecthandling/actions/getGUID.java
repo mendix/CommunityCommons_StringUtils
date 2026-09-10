@@ -13,18 +13,22 @@ import com.mendix.systemwideinterfaces.core.IContext;
 import com.mendix.systemwideinterfaces.core.IMendixObject;
 import com.mendix.webui.CustomJavaAction;
 import objecthandling.ORM;
+import com.mendix.systemwideinterfaces.core.UserAction;
 
 /**
  * returns the Global Unique Identifier (GUID, or id) of an object.
  */
-public class getGUID extends CustomJavaAction<java.lang.Long>
+public class getGUID extends UserAction<java.lang.Long>
 {
-	private IMendixObject item;
+	private final IMendixObject item;
 
-	public getGUID(IContext context, IMendixObject item)
+	public getGUID(
+		IContext context,
+		IMendixObject _item
+	)
 	{
 		super(context);
-		this.item = item;
+		this.item = _item;
 	}
 
 	@java.lang.Override
@@ -37,6 +41,7 @@ public class getGUID extends CustomJavaAction<java.lang.Long>
 
 	/**
 	 * Returns a string representation of this action
+	 * @return a string representation of this action
 	 */
 	@java.lang.Override
 	public java.lang.String toString()

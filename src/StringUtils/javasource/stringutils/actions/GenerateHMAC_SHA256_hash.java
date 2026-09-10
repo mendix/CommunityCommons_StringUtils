@@ -12,20 +12,25 @@ package stringutils.actions;
 import com.mendix.systemwideinterfaces.core.IContext;
 import com.mendix.webui.CustomJavaAction;
 import stringutils.StringUtils;
+import com.mendix.systemwideinterfaces.core.UserAction;
 
 /**
  * Creates a HMAC SHA 256 byte array which is Base64 encoded. The result is returned as a String.
  */
-public class GenerateHMAC_SHA256_hash extends CustomJavaAction<java.lang.String>
+public class GenerateHMAC_SHA256_hash extends UserAction<java.lang.String>
 {
-	private java.lang.String key;
-	private java.lang.String valueToEncrypt;
+	private final java.lang.String key;
+	private final java.lang.String valueToEncrypt;
 
-	public GenerateHMAC_SHA256_hash(IContext context, java.lang.String key, java.lang.String valueToEncrypt)
+	public GenerateHMAC_SHA256_hash(
+		IContext context,
+		java.lang.String _key,
+		java.lang.String _valueToEncrypt
+	)
 	{
 		super(context);
-		this.key = key;
-		this.valueToEncrypt = valueToEncrypt;
+		this.key = _key;
+		this.valueToEncrypt = _valueToEncrypt;
 	}
 
 	@java.lang.Override
@@ -38,6 +43,7 @@ public class GenerateHMAC_SHA256_hash extends CustomJavaAction<java.lang.String>
 
 	/**
 	 * Returns a string representation of this action
+	 * @return a string representation of this action
 	 */
 	@java.lang.Override
 	public java.lang.String toString()

@@ -12,20 +12,25 @@ package stringutils.actions;
 import com.mendix.systemwideinterfaces.core.IContext;
 import com.mendix.webui.CustomJavaAction;
 import stringutils.StringUtils;
+import com.mendix.systemwideinterfaces.core.UserAction;
 
 /**
  * Creates a HMAC SHA 256 byte array and converts it into a String representing the hexadecimal values of each byte in order.
  */
-public class GenerateHMAC_SHA256_HexDigest extends CustomJavaAction<java.lang.String>
+public class GenerateHMAC_SHA256_HexDigest extends UserAction<java.lang.String>
 {
-	private java.lang.String key;
-	private java.lang.String value;
+	private final java.lang.String key;
+	private final java.lang.String value;
 
-	public GenerateHMAC_SHA256_HexDigest(IContext context, java.lang.String key, java.lang.String value)
+	public GenerateHMAC_SHA256_HexDigest(
+		IContext context,
+		java.lang.String _key,
+		java.lang.String _value
+	)
 	{
 		super(context);
-		this.key = key;
-		this.value = value;
+		this.key = _key;
+		this.value = _value;
 	}
 
 	@java.lang.Override
@@ -38,6 +43,7 @@ public class GenerateHMAC_SHA256_HexDigest extends CustomJavaAction<java.lang.St
 
 	/**
 	 * Returns a string representation of this action
+	 * @return a string representation of this action
 	 */
 	@java.lang.Override
 	public java.lang.String toString()

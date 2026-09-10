@@ -12,15 +12,19 @@ package unittesting.actions;
 import unittesting.TestManager;
 import com.mendix.systemwideinterfaces.core.IContext;
 import com.mendix.webui.CustomJavaAction;
+import com.mendix.systemwideinterfaces.core.UserAction;
 
-public class ThrowAssertionFailed extends CustomJavaAction<java.lang.Boolean>
+public class ThrowAssertionFailed extends UserAction<java.lang.Boolean>
 {
-	private java.lang.String message;
+	private final java.lang.String message;
 
-	public ThrowAssertionFailed(IContext context, java.lang.String message)
+	public ThrowAssertionFailed(
+		IContext context,
+		java.lang.String _message
+	)
 	{
 		super(context);
-		this.message = message;
+		this.message = _message;
 	}
 
 	@java.lang.Override
@@ -33,6 +37,7 @@ public class ThrowAssertionFailed extends CustomJavaAction<java.lang.Boolean>
 
 	/**
 	 * Returns a string representation of this action
+	 * @return a string representation of this action
 	 */
 	@java.lang.Override
 	public java.lang.String toString()

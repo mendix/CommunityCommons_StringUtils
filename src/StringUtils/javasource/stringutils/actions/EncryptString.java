@@ -12,21 +12,26 @@ package stringutils.actions;
 import com.mendix.systemwideinterfaces.core.IContext;
 import com.mendix.webui.CustomJavaAction;
 import stringutils.StringUtils;
+import com.mendix.systemwideinterfaces.core.UserAction;
 
 /**
  * Applies AES encryption to the value string using a symmetric key. 
  * The keylength should exactly be 16 characters (128 bit).
  */
-public class EncryptString extends CustomJavaAction<java.lang.String>
+public class EncryptString extends UserAction<java.lang.String>
 {
-	private java.lang.String valueToEncrypt;
-	private java.lang.String key;
+	private final java.lang.String valueToEncrypt;
+	private final java.lang.String key;
 
-	public EncryptString(IContext context, java.lang.String valueToEncrypt, java.lang.String key)
+	public EncryptString(
+		IContext context,
+		java.lang.String _valueToEncrypt,
+		java.lang.String _key
+	)
 	{
 		super(context);
-		this.valueToEncrypt = valueToEncrypt;
-		this.key = key;
+		this.valueToEncrypt = _valueToEncrypt;
+		this.key = _key;
 	}
 
 	@java.lang.Override
@@ -39,6 +44,7 @@ public class EncryptString extends CustomJavaAction<java.lang.String>
 
 	/**
 	 * Returns a string representation of this action
+	 * @return a string representation of this action
 	 */
 	@java.lang.Override
 	public java.lang.String toString()

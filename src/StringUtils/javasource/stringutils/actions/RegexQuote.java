@@ -12,19 +12,23 @@ package stringutils.actions;
 import com.mendix.systemwideinterfaces.core.IContext;
 import com.mendix.webui.CustomJavaAction;
 import stringutils.StringUtils;
+import com.mendix.systemwideinterfaces.core.UserAction;
 
 /**
  * Escapes a string value so that it can be used literally with Mendix build-in regex replacement functions. 
  * e.g. *star results in \\Q*star\\E
  */
-public class RegexQuote extends CustomJavaAction<java.lang.String>
+public class RegexQuote extends UserAction<java.lang.String>
 {
-	private java.lang.String unquotedLiteral;
+	private final java.lang.String unquotedLiteral;
 
-	public RegexQuote(IContext context, java.lang.String unquotedLiteral)
+	public RegexQuote(
+		IContext context,
+		java.lang.String _unquotedLiteral
+	)
 	{
 		super(context);
-		this.unquotedLiteral = unquotedLiteral;
+		this.unquotedLiteral = _unquotedLiteral;
 	}
 
 	@java.lang.Override
@@ -37,6 +41,7 @@ public class RegexQuote extends CustomJavaAction<java.lang.String>
 
 	/**
 	 * Returns a string representation of this action
+	 * @return a string representation of this action
 	 */
 	@java.lang.Override
 	public java.lang.String toString()

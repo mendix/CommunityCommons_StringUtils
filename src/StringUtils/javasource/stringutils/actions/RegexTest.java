@@ -12,6 +12,7 @@ package stringutils.actions;
 import com.mendix.systemwideinterfaces.core.IContext;
 import com.mendix.webui.CustomJavaAction;
 import stringutils.StringUtils;
+import com.mendix.systemwideinterfaces.core.UserAction;
 
 /**
  * Returns true if a value matches a regular expression. 
@@ -21,16 +22,20 @@ import stringutils.StringUtils;
  * http://download.oracle.com/javase/1.4.2/docs/api/java/util/regex/Pattern.html
  * 
  */
-public class RegexTest extends CustomJavaAction<java.lang.Boolean>
+public class RegexTest extends UserAction<java.lang.Boolean>
 {
-	private java.lang.String value;
-	private java.lang.String regex;
+	private final java.lang.String value;
+	private final java.lang.String regex;
 
-	public RegexTest(IContext context, java.lang.String value, java.lang.String regex)
+	public RegexTest(
+		IContext context,
+		java.lang.String _value,
+		java.lang.String _regex
+	)
 	{
 		super(context);
-		this.value = value;
-		this.regex = regex;
+		this.value = _value;
+		this.regex = _regex;
 	}
 
 	@java.lang.Override
@@ -43,6 +48,7 @@ public class RegexTest extends CustomJavaAction<java.lang.Boolean>
 
 	/**
 	 * Returns a string representation of this action
+	 * @return a string representation of this action
 	 */
 	@java.lang.Override
 	public java.lang.String toString()

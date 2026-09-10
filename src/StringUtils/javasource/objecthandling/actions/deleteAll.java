@@ -13,18 +13,22 @@ import com.mendix.systemwideinterfaces.core.IContext;
 import com.mendix.systemwideinterfaces.core.IMendixObject;
 import com.mendix.webui.CustomJavaAction;
 import objecthandling.XPath;
+import com.mendix.systemwideinterfaces.core.UserAction;
 
 /**
  * Removes ALL instances of a certain domain object type using batches.
  */
-public class deleteAll extends CustomJavaAction<java.lang.Boolean>
+public class deleteAll extends UserAction<java.lang.Boolean>
 {
-	private IMendixObject entityType;
+	private final IMendixObject entityType;
 
-	public deleteAll(IContext context, IMendixObject entityType)
+	public deleteAll(
+		IContext context,
+		IMendixObject _entityType
+	)
 	{
 		super(context);
-		this.entityType = entityType;
+		this.entityType = _entityType;
 	}
 
 	@java.lang.Override
@@ -37,6 +41,7 @@ public class deleteAll extends CustomJavaAction<java.lang.Boolean>
 
 	/**
 	 * Returns a string representation of this action
+	 * @return a string representation of this action
 	 */
 	@java.lang.Override
 	public java.lang.String toString()
