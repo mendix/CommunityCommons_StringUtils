@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 import com.google.common.collect.Lists;
 import com.mendix.systemwideinterfaces.MendixRuntimeException;
 import com.mendix.systemwideinterfaces.core.IContext;
-import com.mendix.webui.CustomJavaAction;
 import stringutils.StringUtils;
 import stringutils.proxies.SanitizerPolicy;
 import com.mendix.systemwideinterfaces.core.UserAction;

@@ -10,7 +10,6 @@
 package stringutils.actions;
 
 import com.mendix.systemwideinterfaces.core.IContext;
-import com.mendix.webui.CustomJavaAction;
 import stringutils.StringUtils;
 import com.mendix.systemwideinterfaces.core.UserAction;
 

@@ -9,10 +9,10 @@
 
 package unittesting.actions;
 
+import unittesting.ConfigurationManager;
 import unittesting.RemoteApiServlet;
 import com.mendix.core.Core;
 import com.mendix.systemwideinterfaces.core.IContext;
-import com.mendix.webui.CustomJavaAction;
 import com.mendix.systemwideinterfaces.core.UserAction;
 
 public class StartRemoteApiServlet extends UserAction<java.lang.Boolean>
@@ -32,6 +32,8 @@ public class StartRemoteApiServlet extends UserAction<java.lang.Boolean>
 	public java.lang.Boolean executeAction() throws Exception
 	{
 		// BEGIN USER CODE
+		if (!ConfigurationManager.verifyModuleIsEnabled()) return false;
+
 		Core.addRequestHandler("unittests/", new RemoteApiServlet(password));
 		return true;
 		// END USER CODE

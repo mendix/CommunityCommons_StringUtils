@@ -9,9 +9,9 @@
 
 package unittesting.actions;
 
+import unittesting.TestExecutionContext;
 import unittesting.TestManager;
 import com.mendix.systemwideinterfaces.core.IContext;
-import com.mendix.webui.CustomJavaAction;
 import com.mendix.systemwideinterfaces.core.UserAction;
 
 public class ThrowAssertionFailed extends UserAction<java.lang.Boolean>
@@ -31,6 +31,9 @@ public class ThrowAssertionFailed extends UserAction<java.lang.Boolean>
 	public java.lang.Boolean executeAction() throws Exception
 	{
 		// BEGIN USER CODE
+		TestExecutionContext executionContext = TestManager.instance().executionContext();
+		executionContext.collectAssertion(null, false, message);
+
 		throw new TestManager.AssertionException(message);
 		// END USER CODE
 	}

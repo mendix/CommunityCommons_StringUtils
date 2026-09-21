@@ -9,12 +9,13 @@
 
 package unittesting.actions;
 
+import com.mendix.logging.ILogNode;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import unittesting.ConfigurationManager;
 import unittesting.TestManager;
 import com.mendix.core.Core;
 import com.mendix.systemwideinterfaces.core.IContext;
 import com.mendix.systemwideinterfaces.core.IMendixObject;
-import com.mendix.webui.CustomJavaAction;
 import com.mendix.systemwideinterfaces.core.UserAction;
 
 public class RunAllUnitTestsWrapper extends UserAction<java.lang.Boolean>
@@ -39,11 +40,12 @@ public class RunAllUnitTestsWrapper extends UserAction<java.lang.Boolean>
 	{
 		// BEGIN USER CODE
 		try {
-			//Run tests in a new context without transaction!
+			// Run tests in a new context without transaction!
 			TestManager.instance().runTestSuite(Core.createSystemContext(), testRun);
-		}
-		catch(Exception e) {
-			TestManager.LOG.error("An error occurred while trying to run the unit tests: " + ExceptionUtils.getRootCauseMessage(e), e);
+		} catch (Exception e) {
+			LOG.error(
+					"An error occurred while trying to run the unit tests: " + ExceptionUtils.getRootCauseMessage(e),
+					e);
 			return false;
 		}
 		return true;
@@ -61,5 +63,6 @@ public class RunAllUnitTestsWrapper extends UserAction<java.lang.Boolean>
 	}
 
 	// BEGIN EXTRA CODE
+	private static final ILogNode LOG = ConfigurationManager.LOG;
 	// END EXTRA CODE
 }
